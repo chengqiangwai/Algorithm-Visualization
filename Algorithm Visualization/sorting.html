@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sorting</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/sorting.css">
+</head>
+
+<body>
+    <div id="container">
+        <div class="arrayContainer">
+            <span v-for="(item, index) in toBeSortArray" :key="index" class={{"singleItem" + item.isComparing ? 'isComparing' : '' + item.isSmallest ? 'isSmallest' : '' }}>
+                {{item}}
+            </span>
+        </div>
+        <button v-on:click="sort" class="sortButton">sort</button>
+    </div>
+    <script>
+        const vueContainer = new Vue({
+            el: '#container',
+            data() {
+                return {
+                    toBeSortArray: [
+                        {
+                            value: 11,
+                            isComparing: false,
+                            isSmallest: false
+                        }, 
+                        {
+                            value: 41,
+                            isComparing: false,
+                            isSmallest: false
+                        },
+                        {
+                            value: 21,
+                            isComparing: false,
+                            isSmallest: false
+                        }, 
+                        {
+                            value: 241,
+                            isComparing: false,
+                            isSmallest: false
+                        }, 
+                        {
+                            value: 121,
+                            isComparing: false,
+                            isSmallest: false
+                        }, 
+                        {
+                            value: 6541,
+                            isComparing: false,
+                            isSmallest: false
+                        }, 
+                        {
+                            value: 2341,
+                            isComparing: false,
+                            isSmallest: false
+                        }, 
+                        {
+                            value: 194,
+                            isComparing: false,
+                            isSmallest: false
+                        }, 
+                        {
+                            value: 152,
+                            isComparing: false,
+                            isSmallest: false
+                        }, 
+                        {
+                            value: 6521,
+                            isComparing: false,
+                            isSmallest: false
+                        }
+                    ] 
+
+                }
+            },
+            created() {
+                // console.log(this, this.sort());
+            },
+            methods: {
+                sort: function () {
+                    let tempArray = this.toBeSortArray;
+                    let currentSmallest = 0;
+                    for (let j = 1; j <= tempArray.length; j++) {
+                        console.log(`The No.${j} run of finding smallest item begins;`);
+                        console.log(`The compare range is the item after item ${j} included`);
+                        for (let i = j; i < tempArray.length; i++) {
+                            console.log(`compare item${i} with currentSmallest${currentSmallest}`);
+                            if (tempArray[i] < tempArray[currentSmallest]) {
+                                console.log(`item${i} is smaller than currentSmallest${currentSmallest}, currentSmallest become ${i})`);
+                                currentSmallest = i;
+                            }
+                        }
+                        console.log(`The No.${j} run of finding smallest item ended; And the smallest found is item${currentSmallest} ${tempArray[currentSmallest]}`);
+                        let temp = tempArray[currentSmallest];
+                        Vue.set(tempArray, currentSmallest, tempArray[j - 1]);
+                        Vue.set(tempArray, j - 1, temp);
+                        currentSmallest = j;
+                        console.log(`After swap, the Array became ${tempArray}`);
+                    }
+
+                }
+            },
+        });
+    </script>
+</body>
+
+</html>
