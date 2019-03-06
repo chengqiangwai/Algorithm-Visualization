@@ -14,6 +14,8 @@
     border-radius: 4px;
     text-align: center;
     padding: 10px;
+    background-color: deepskyblue;
+    transition: border-color 10s, background-color 1 s
 }
 .sortButton{
     background-color: rgba(0,0,0,0.1);
