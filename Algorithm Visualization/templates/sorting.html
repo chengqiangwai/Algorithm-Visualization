@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sorting</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/sorting.css">
+</head>
+
+<body>
+    <div id="container">
+        <div class="arrayContainer">
+            <span v-for="(item, index) in toBeSortArray" :key="index"
+                v-bind:class="{ singleItem: true, isSmallest: item.isSmallest, isComparing: item.isComparing }">
+                {{item.value}}
+            </span>
+        </div>
+        <button v-on:click="sort" class="sortButton">sort</button>
+    </div>
+    <script>
+        const vueContainer = new Vue({
+            el: '#container',
+            data() {
+                return {
+                    toBeSortArray: [
+                        {
+                            value: 11,
+                            isComparing: true,
+                            isSmallest: true
+                        },
+                        {
+                            value: 41,
+                            isComparing: false,
+                            isSmallest: false
+                        },
+                        {
+                            value: 21,
+                            isComparing: false,
+                            isSmallest: false
+                        },
+                        {
+                            value: 241,
+                            isComparing: false,
+                            isSmallest: false
+                        },
+                        {
+                            value: 121,
+                            isComparing: false,
+                            isSmallest: false
+                        },
+                        {
+                            value: 6541,
+                            isComparing: false,
+                            isSmallest: false
+                        },
+                        {
+                            value: 2341,
+                            isComparing: false,
+                            isSmallest: false
+                        },
+                        {
+                            value: 194,
+                            isComparing: false,
+                            isSmallest: false
+                        },
+                        {
+                            value: 152,
+                            isComparing: false,
+                            isSmallest: false
+                        },
+                        {
+                            value: 6521,
+                            isComparing: false,
+                            isSmallest: false
+                        }
+                    ]
+
+                }
+            },
+            created() {
+                // console.log(this, this.sort());
+            },
+            methods: {
+                sort: function () {
+                    // let this.toBeSortArray = this.toBeSortArray;
+                    let currentSmallest = 0;
+                    Vue.set(this.toBeSortArray, currentSmallest, Object.assign({}, this.toBeSortArray[currentSmallest], { isSmallest: true, isComparing: true }));
+                    for (let j = 1; j <= this.toBeSortArray.length; j++) {
+                        console.log(`The No.${j} run of finding smallest item begins;`);
+                        console.log(`The compare range is the item after item ${j} included`);
+
+                        for (let i = j; i < this.toBeSortArray.length; i++) {
+                            console.log(`compare item ${i} with currentSmallest ${currentSmallest}`);
+                            Vue.set(this.toBeSortArray, i, Object.assign({}, this.toBeSortArray[i], { isComparing: true }));
+                            this.sleep(1000);
+                            if (this.toBeSortArray[i].value < this.toBeSortArray[currentSmallest].value) {
+                                console.log(`item${i} is smaller than currentSmallest${currentSmallest}, currentSmallest become ${i})`);
+                                Vue.set(this.toBeSortArray, currentSmallest, Object.assign({}, this.toBeSortArray[currentSmallest], { isSmallest: false,isComparing: false }));
+                                currentSmallest = i;
+                                Vue.set(this.toBeSortArray, currentSmallest, Object.assign({}, this.toBeSortArray[currentSmallest], { isSmallest: true, isComparing:true }));
+                            }
+                            Vue.set(this.toBeSortArray, i, Object.assign({}, this.toBeSortArray[i], { isComparing: false }));
+                        }
+                        this.sleep(1000);
+                        Vue.set(this.toBeSortArray, currentSmallest, Object.assign({}, this.toBeSortArray[currentSmallest], { isSmallest: true }));
+                        console.log(`The No.${j} run of finding smallest item ended; And the smallest found is item${currentSmallest} ${this.toBeSortArray[currentSmallest]}`);
+                        let temp = this.toBeSortArray[currentSmallest];
+                        Vue.set(this.toBeSortArray, currentSmallest, Object.assign({}, this.toBeSortArray[j - 1], { isSmallest: false, isComparing: false }));
+                        Vue.set(this.toBeSortArray, j - 1, Object.assign({}, this.toBeSortArray[j - 1], { isSmallest: true, isComparing: false }));
+                        currentSmallest = j;
+                        Vue.set(this.toBeSortArray, currentSmallest, Object.assign({}, this.toBeSortArray[currentSmallest], { isSmallest: true, isComparing: true }));
+                        console.log(`After swap, the Array became ${JSON.stringify(this.toBeSortArray)}`);
+                    }
+
+                },
+                sleep: function(sleepTime){
+                    for (let startTime = Date.now(); Date.now() - startTime <= sleepTime;){
+
+                    }
+                }
+            },
+        });
+    </script>
+</body>
+
+</html>

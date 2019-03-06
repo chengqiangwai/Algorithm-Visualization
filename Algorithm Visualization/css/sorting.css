@@ -4,16 +4,16 @@
     justify-content: center;
     align-items: center;
     height: 800px;
-    background-color: rgb(238, 190, 202)
+    background-color: rgb(190, 238, 214)
 }
 .singleItem{
     display: inline-block;
-    width: 20px;
     height: 20px;
     margin: 5px;
     border: 1px solid cornflowerblue;
     border-radius: 4px;
     text-align: center;
+    padding: 10px;
 }
 .sortButton{
     background-color: rgba(0,0,0,0.1);
@@ -25,4 +25,11 @@
     border-radius: 5px;
     margin-top: 10px;
     line-height: 20px;
+}
+.isComparing{
+    background-color: darkturquoise
+}
+.isSmallest{
+    border-color: crimson;
+    border-width: 5px;
 }

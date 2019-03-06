@@ -1,0 +1,19 @@
+{
+  "name": "algorithm-visualization",
+  "version": "1.0.0",
+  "description": "算法可视化尝试",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chengqiangwai/Algorithm-Visualization.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chengqiangwai/Algorithm-Visualization/issues"
+  },
+  "homepage": "https://github.com/chengqiangwai/Algorithm-Visualization#readme"
+}
