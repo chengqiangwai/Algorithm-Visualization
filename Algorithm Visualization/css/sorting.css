@@ -18,7 +18,7 @@
     transition: border-color 10s, background-color 1 s
 }
 .sortButton{
-    background-color: rgba(0,0,0,0.1);
+    background-color: rgba(222, 240, 158, 0.1);
     border: 1px solid dodgerblue;
     height: 30px;
     width: 100px;
