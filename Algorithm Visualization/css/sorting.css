@@ -29,9 +29,12 @@
     line-height: 20px;
 }
 .isComparing{
-    background-color: darkturquoise
+    background-color: yellow;
+    border: 2px solid rgb(128, 94, 0);
 }
 .isSmallest{
+    background-color: brown;
     border-color: crimson;
     border-width: 5px;
+    border-radius: 5px;
 }

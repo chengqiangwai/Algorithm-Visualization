@@ -13,21 +13,24 @@
 <body>
     <div id="container">
         <div class="arrayContainer">
-            <span v-for="(item, index) in toBeSortArray" :key="index"
-                v-bind:class="{ singleItem: true, isSmallest: item.isSmallest, isComparing: item.isComparing }">
+            <span v-for="(item, index) in allProcess[currentStep]" :key="index"
+                v-bind:class="{ singleItem: true, isSmallest: item.isSmallest, isComparing: item.isComparing }"
+                v-bind:style="{ height: item.value}"
+            >
                 {{item.value}}
             </span>
         </div>
         <canvas id="sortCanvas" width="800px" height="200px">
             Your broswer doesn't support canvas!
         </canvas>
-        <button v-on:click="sort" class="sortButton">sort</button>
+        <button v-on:click="renderSort" class="sortButton">sort</button>
     </div>
     <script>
         const vueContainer = new Vue({
             el: '#container',
             data() {
                 return {
+                    allProcess: [],
                     toBeSortArray: [
                         {
                             value: 11,
@@ -81,27 +84,26 @@
                         }
                     ],
                     sortCanvas: null,
-                    sortContext: null
+                    sortContext: null,
+                    currentStep: 0
                 }
             },
             mounted() {
                 console.log('mounted');
                 this.sortCanvas = document.getElementById('sortCanvas');
-                console.log(this.sortCanvas,this.sortCanvas.getContext('2d'))
+                console.log(this.sortCanvas, this.sortCanvas.getContext('2d'))
                 this.sortContext = this.sortCanvas.getContext('2d');
-                this.sort();
+                this.sort1();
                 // console.log(this, this.sort());
             },
             methods: {
                 sort: function () {
-                    // Vue.set(this.toBeSortArray, 0, Object.assign({}, this.toBeSortArray[0], { isComparing: true }));
-                    // let this.toBeSortArray = this.toBeSortArray;
                     let currentSmallest = 0;
                     Vue.set(this.toBeSortArray, currentSmallest, Object.assign({}, this.toBeSortArray[currentSmallest], { isSmallest: true, isComparing: true }));
                     for (let j = 1; j <= this.toBeSortArray.length; j++) {
                         console.log(`The No.${j} run of finding smallest item begins;`);
                         console.log(`The compare range is the item after item ${j} included`);
-                        
+
                         for (let i = j; i < this.toBeSortArray.length; i++) {
                             console.log(`compare item ${i} with currentSmallest ${currentSmallest}`);
                             Vue.set(this.toBeSortArray, i, Object.assign({}, this.toBeSortArray[i], { isComparing: true }));
@@ -132,39 +134,73 @@
                     }
 
                 },
+                sort1: function () {
+                    let currentSmallest = 0;
+                    let tempArr = this.toBeSortArray;
+                    for (let i = 0; i < tempArr.length; i++) {
+                        currentSmallest = i;
+                        for (let j = i + 1; j < tempArr.length; j++) {
+                            Vue.set(this.toBeSortArray, j, Object.assign(tempArr[j], { isComparing: true }));
+                            Vue.set(this.toBeSortArray, currentSmallest, Object.assign(tempArr[currentSmallest], { isComparing: true }));
+                            this.allProcess.push(JSON.parse(JSON.stringify(tempArr)));
+                            if (tempArr[currentSmallest].value > tempArr[j].value) {
+                                Vue.set(this.toBeSortArray, currentSmallest, Object.assign(tempArr[currentSmallest], { isComparing: false }));
+                                currentSmallest = j;
+                            } else {
+                                Vue.set(this.toBeSortArray, j, Object.assign(tempArr[j], { isComparing: false }));
+                            }
+                            this.allProcess.push(JSON.parse(JSON.stringify(tempArr)));
+                        }
+                        const temp = tempArr[currentSmallest];
+                        Vue.set(this.toBeSortArray, currentSmallest, Object.assign({}, tempArr[i]));
+                        Vue.set(this.toBeSortArray, i, Object.assign(temp, { isSmallest: true, isComparing: false }));
+                        this.allProcess.push(JSON.parse(JSON.stringify(tempArr)));
+                        console.log(this.allProcess);
+                    }
+                    // console.log(this.allProcess);
+                },
                 sleep: function (sleepTime) {
                     for (let startTime = Date.now(); Date.now() - startTime <= sleepTime;) {
 
                     }
                 },
                 renderSort: function () {
-                    this.sortContext.clearRect(0, 0, 500, 500);
-                    const tempArr = this.toBeSortArray;
-                    // 设置字体
-                    this.sortContext.font = "Bold 20px Arial";
-                    // 设置对齐方式
-                    this.sortContext.textAlign = "center";
-                    // 设置填充颜色
-                    // this.sortContext.fillStyle = "rgba(0,0,0,1)";
-                    // 设置字体内容，以及在画布上的位置
+                    this.currentStep = 0;
+                    const timer = setInterval(() => {
+                        if(this.currentStep < this.allProcess.length - 1){
+                            this.currentStep ++
+                        }else{
+                            clearInterval(timer);
+                        }
+                    }, 500);
+                    // requestAnimationFrame(this.renderSort);
+                    // this.sortContext.clearRect(0, 0, 500, 500);
+                    // const tempArr = this.toBeSortArray;
+                    // // 设置字体
+                    // this.sortContext.font = "Bold 20px Arial";
+                    // // 设置对齐方式
+                    // this.sortContext.textAlign = "center";
+                    // // 设置填充颜色
+                    // // this.sortContext.fillStyle = "rgba(0,0,0,1)";
+                    // // 设置字体内容，以及在画布上的位置
 
-                    for (let i = 0; i < 1; i++) {
-                        this.sortContext.lineWidth = 2;
-                        if (tempArr.isComparing) {
-                            this.sortContext.strokeStyle = 'rgba(222, 240, 158, 0.5);';
-                        } else {
-                            this.sortContext.strokeStyle = 'rgba(222, 240, 158, 0.1);';
-                        }
-                        if (this.isSmallest) {
-                            this.sortContext.fillStyle = 'rgba(255,234,211,0.5)'
-                        } else {
-                            this.sortContext.fillStyle = 'rgba(255,234,211,0.1)'
-                        }
-                        // this.sortContext.fillRect(60 * i + 50, 20, 60 * i + 80, 40);
-                        this.sortContext.strokeRect(90 * i + 10, 20, 90 * i + 60, 40);
-                        this.sortContext.fillStyle = "red";
-                        this.sortContext.fillText(tempArr[i].value, 90 * i + 35, 30)
-                    }
+                    // for (let i = 0; i < 1; i++) {
+                    //     this.sortContext.lineWidth = 2;
+                    //     if (tempArr.isComparing) {
+                    //         this.sortContext.strokeStyle = 'rgba(222, 240, 158, 0.5);';
+                    //     } else {
+                    //         this.sortContext.strokeStyle = 'rgba(222, 240, 158, 0.1);';
+                    //     }
+                    //     if (this.isSmallest) {
+                    //         this.sortContext.fillStyle = 'rgba(255,234,211,0.5)'
+                    //     } else {
+                    //         this.sortContext.fillStyle = 'rgba(255,234,211,0.1)'
+                    //     }
+                    //     // this.sortContext.fillRect(60 * i + 50, 20, 60 * i + 80, 40);
+                    //     this.sortContext.strokeRect(90 * i + 10, 20, 90 * i + 60, 40);
+                    //     this.sortContext.fillStyle = "red";
+                    //     this.sortContext.fillText(tempArr[i].value, 90 * i + 35, 30)
+                    // }
                 }
             },
         });
