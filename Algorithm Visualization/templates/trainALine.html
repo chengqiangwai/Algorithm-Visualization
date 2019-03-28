@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+</head>
+                                
+<body>
+    <script>
+        const a = tf.variable(tf.scalar(Math.random()));
+        const b = tf.variable(tf.scalar(Math.random()));
+        const c = tf.variable(tf.scalar(Math.random()));
+        const d = tf.variable(tf.scalar(Math.random()));
+
+
+        function trueY(x) {
+            const a = tf.scalar(0.0005);
+            const b = tf.scalar(0.00015);
+            const c = tf.scalar(-0.35);
+            const d = tf.scalar(-5);
+            return a.mul(x.pow(tf.scalar(3)))
+                .add(b.mul(x.square()))
+                .add(c.mul(x))
+                .add(d);
+        }
+
+        function predictY(x) {
+            return a.mul(x.pow(tf.scalar(3)))
+                .add(b.mul(x.square()))
+                .add(c.mul(x))
+                .add(d);
+        }
+
+        let tempXs = [];
+
+        function getTestData() {
+            for (let i = -50; i < 50; i++) {
+                const temp = i + Math.random();
+                tempXs.push(temp);
+            }
+        }
+        getTestData();
+        const xs = tf.tensor1d(tempXs);
+        const ys = trueY(xs);
+        // xs.data().then(data => console.log('xs',data, tempXs));
+        // ys.data().then(data => console.log('ys', data));
+        // console.log('xs', xs,'ys',ys);
+
+        function loss(predictions, labels) {
+            try{
+                // console.log(predictions, labels)
+                return predictions.sub(labels).square().mean();
+            }catch(e){
+                console.log('go wrong',e)
+                predictions.array().then(array => {
+                    console.log('array', array);
+                })
+                labels.data().then(labels => {
+                    console.log('labeld', labels);
+                })
+                
+            }
+            
+        }
+
+
+        function train(xs, ys, numIterations = 75) {
+            const learningRate = 0.5;
+            const optimizer = tf.train.sgd(learningRate);
+            console.log('before');
+            a.data().then(data => {
+                console.log('data', data);
+            });
+            ys.data().then(data => {
+                console.log('ys', data);
+            })
+            for (let iter = 0; iter < numIterations; iter++) {
+                optimizer.minimize(() => {
+                    const predictYs = predictY(xs);
+                    return loss(predictYs, ys);
+                })
+            }
+            console.log('after');
+            a.data().then(data => {
+                console.log('data', data);
+            })
+        }
+        tf.enableDebugMode();
+        train(xs, ys);
+    </script>
+</body>
+
+</html>

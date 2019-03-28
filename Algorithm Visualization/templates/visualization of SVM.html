@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://threejs.org/build/three.js"></script>
+</head>
+
+<body>
+    <h1>Hi, 彭静纯！</h1>
+    <div id="allPointContainer">
+        <svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg">
+
+            <circle cx="100" cy="50" r="10" stroke="black" stroke-width="2" fill="red" />
+
+        </svg>
+    </div>
+    <script src="../js/dataset.js"></script>
+    <script>
+        const GOOD_COLOR = new THREE.Color('#9DE2DD', 0.5);
+        const BAD_COLOR = new THREE.Color('#DC9BB1', 0.5);
+        let scene = new THREE.Scene();
+        let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        let renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        let geometry = new THREE.CircleGeometry(2, 32);
+
+        // let circle = new THREE.Mesh(geometry, material);
+        // scene.add(circle);
+        for (let i = 0; i < math_stats_dataset.length; i++) {
+            let tempPoint = math_stats_dataset[i];
+            let material = null;
+            if (tempPoint.performance === 1) {
+                material = new THREE.MeshBasicMaterial({
+                    color: GOOD_COLOR
+                });
+            } else {
+                material = new THREE.MeshBasicMaterial({
+                    color: '#DC9BB1'
+                });
+            }
+            let circle = new THREE.Mesh(geometry, material);
+
+            circle.position.set(tempPoint.math_score, tempPoint.stats_score, 0)
+            scene.add(circle);
+        }
+        camera.position.set(50, 50, 100);
+        renderer.render(scene, camera);
+        // var scene = new THREE.Scene();
+        // var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        // var renderer = new THREE.WebGLRenderer();
+        // renderer.setSize(window.innerWidth, window.innerHeight);
+        // document.body.appendChild(renderer.domElement);
+
+        // var geometry = new THREE.BoxGeometry(1, 1, 1);
+        // var material = new THREE.MeshBasicMaterial({
+        //     color: 0x00ff00
+        // });
+        // var cube = new THREE.Mesh(geometry, material);
+        // scene.add(cube);
+
+        // camera.position.z = 5;
+
+        // var animate = function () {
+        //     requestAnimationFrame(animate);
+
+        //     cube.rotation.x += 0.01;
+        //     cube.rotation.y += 0.01;
+
+        //     renderer.render(scene, camera);
+        // };
+
+        // animate();
+    </script>
+</body>
+
+</html>
