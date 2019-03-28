@@ -3,10 +3,14 @@
 
 <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../css/bubble-gradient.css">
 </head>
 
-<body style="height: 100%; margin: 0 150px 0 0">
-    <div id="container" style="height: 100%"></div>
+<body style="height: 100%; margin: 0">
+    <div id="leftContainer">
+        hi
+    </div>
+    <div id="container" style="height: 100%;margin: 0 25% 0 0"></div>
     <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
     <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
     <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
@@ -36,10 +40,11 @@
                 color: '#cdd0d5'
             }]),
             title: {
+                left: 100,
                 text: '数学和统计学成绩对机器学习的关系'
             },
             legend: {
-                right: 10,
+                right: 100,
                 data: ['good', 'bad']
             },
             xAxis: {
