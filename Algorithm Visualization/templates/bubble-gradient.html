@@ -4,13 +4,7 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="../css/bubble-gradient.css">
-</head>
-
-<body style="height: 100%; margin: 0">
-    <div id="leftContainer">
-        hi
-    </div>
-    <div id="container" style="height: 100%;margin: 0 25% 0 0"></div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
     <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
     <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
@@ -23,6 +17,23 @@
     <!-- <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script> -->
     <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
     <script src="../js/dataset.js"></script>
+</head>
+
+<body style="height: 100%; margin: 0">
+    <div id="leftContainer">
+        <span v-for="word in allWords" class="singleItem" v-html="word"></span>
+    </div>
+    <div id="container" style="height: 100%;margin: 0 35% 0 0"></div>
+
+    <script>
+        const leftContainer = new Vue({
+            el: '#leftContainer',
+            data: {
+                allWords: []
+            }
+        });
+        leftContainer.allWords.push(...allWords);
+    </script>
     <script type="text/javascript">
         var dom = document.getElementById("container");
         var myChart = echarts.init(dom);
@@ -30,7 +41,7 @@
         option = null;
         app.title = '气泡图';
 
-
+        seriesInOption = [];
         option = {
             backgroundColor: new echarts.graphic.RadialGradient(0.3, 0.3, 0.8, [{
                 offset: 0,
@@ -107,10 +118,10 @@
                             shadowOffsetY: 5,
                             color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [{
                                 offset: 0,
-                                color: 'rgb(251, 118, 123)'
+                                color: 'rgb(129, 227, 238)'
                             }, {
                                 offset: 1,
-                                color: 'rgb(204, 46, 72)'
+                                color: 'rgb(25, 183, 207)'
                             }])
                         }
                     }
@@ -139,11 +150,12 @@
                             shadowOffsetY: 5,
                             color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [{
                                 offset: 0,
-                                color: 'rgb(129, 227, 238)'
+                                color: 'rgb(251, 118, 123)'
                             }, {
                                 offset: 1,
-                                color: 'rgb(25, 183, 207)'
+                                color: 'rgb(204, 46, 72)'
                             }])
+                            
                         }
                     }
                 }
@@ -152,7 +164,9 @@
         if (option && typeof option === "object") {
             myChart.setOption(option, true);
         }
-        
+        window.addEventListener("resize", function () {
+            myChart.resize();
+        });
     </script>
 </body>
 
