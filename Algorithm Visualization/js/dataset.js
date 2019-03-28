@@ -54,7 +54,7 @@ let allWords = [
     `也许，基于这一发现，可以指定参加课程的前提条件。`,
     `这一问题如何求解？让我们从表示已有数据开始。`,
     `我们可以绘制一张二维图形，其中一根轴表示数学成绩，另一根表示统计学成绩。`,
-    `<button id="drawPlot">click to draw</button>`,
+    `<button class="normalButton" id="drawPlot" onclick="drawPlot()">click to draw</button>`,
     `这样每个学生就成了图上的一个点。`,
     `点的颜色——<span style="color:green">绿</span>或<span style="color:red">红</span>`,
     `表示学生在ML课程上的词表现：“优”或“差”。`
