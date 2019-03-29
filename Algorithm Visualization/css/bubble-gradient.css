@@ -1,12 +1,17 @@
+html,body{
+    height: 100%;
+}
 #leftContainer{
     position: absolute;
-    height: 100%;
+    height: 100vh;
     width: 35%;
     right: 0;
     background: radial-gradient(
         #f7f8fa,
         #cdd0d5
-    )
+    );
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 .singleItem{
     display: inline-block;
