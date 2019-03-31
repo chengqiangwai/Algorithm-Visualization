@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../css/bubble-gradient.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js">
+    </script>
+    <!-- <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script> -->
+    <!-- <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script> -->
+    <!-- <script type="text/javascript"
+        src="https://api.map.baidu.com/api?v=2.0&ak=xfhhaTThl11qYVrqLZii6w8qE5ggnhrY&__ec_v__=20190126"></script> -->
+    <!-- <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script> -->
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+    <script src="../js/dataset.js"></script>
+</head>
+
+<body style="height: 100%; margin: 0">
+    <div id="leftContainer">
+        <span v-for="word in allWords" class="singleItem" v-html="word"></span>
+    </div>
+    <div id="container" style="height: 100%;margin: 0 35% 0 0"></div>
+
+    <script>
+        const leftContainer = new Vue({
+            el: '#leftContainer',
+            data: {
+                allWords: []
+            }
+        });
+        leftContainer.allWords.push(...allWords);
+    </script>
+    <script src="../js//index.js"></script>
+</body>
+
+</html>

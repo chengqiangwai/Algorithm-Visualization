@@ -3,6 +3,17 @@ let dataset_echart = [
     [],
     []
 ];
+
+let mutiple_dataset_echart = [
+    [],
+    []
+]
+
+let mutiple_dataset_3D_echart = [
+    [],
+    []
+]
+
 for (let i = 80; i < 100; i += 2) {
     let tempI = i + Math.random();
     for (let j = 0; j < 3; j++) {
@@ -24,7 +35,7 @@ for (let i = 80; i < 100; i += 2) {
     }
 }
 
-for (let i = 40; i < 90; ) {
+for (let i = 40; i < 90;) {
     let tempI = i;
     dataset_echart[0].push(
         [
@@ -45,6 +56,41 @@ for (let i = 15; i < 55;) {
         ]
     );
     i += i / 40;
+}
+
+for (let i = -20; i <= 20; i += Math.random()) {
+    if (i < -1 || i > 1) {
+        let x2 = 20 / i + i * Math.random();
+        let x3 = 2 * i * x2 + 50;
+        mutiple_dataset_echart[0].push([
+            i,
+            x2,
+            'good',
+        ]);
+        mutiple_dataset_3D_echart[0].push([
+            i * i,
+            x2 * x2,
+            x3,
+            'good'
+        ])
+    }
+}
+for (let i = -20; i <= 20; i += Math.random()) {
+    if (i < -1 || i > 1) {
+        let x2 = -20 / i - i * Math.random();
+        let x3 = 2 * i * x2 - 50;
+        mutiple_dataset_echart[1].push([
+            i,
+            x2,
+            'bad',
+        ]);
+        mutiple_dataset_3D_echart[1].push([
+            i * i,
+            x2 * x2,
+            x3,
+            'bad'
+        ])
+    }
 }
 let allWords = [
     `假设你的大学开设了一门机器学习（ML）课程.`,
@@ -68,5 +114,7 @@ let allWords = [
     `这里的直线是我们的分界（separating boundary）（因为它分离了标签）或者分类器（classifier）（我们使用它分类数据点）。`,
     `这些直线都可以将样本分类，但那一条更好呢？`,
     `<button class="normalButton" onclick="leaveOneLine()">click to leave just one line</button>`,
-    `<button class="normalButton" onclick="drawDistanceLine()">find shortest point</button>`
+    `<button class="normalButton" onclick="drawDistanceLine()">find shortest point</button>`,
+    `<button class="normalButton" onclick="drawNoLinear()">show linear inseparability</button>`,
+    `<button class="normalButton" onclick="drawNoLinearWithAnimation()">show linear inseparability</button>`
 ];

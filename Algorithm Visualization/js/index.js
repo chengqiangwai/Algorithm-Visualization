@@ -241,19 +241,29 @@ function drawDistanceLine() {
         let tempDistance = getDistance(onlyLine, dataset_echart[0][i]);
         let tempX = dataset_echart[0][i][0];
         let tempY = dataset_echart[0][i][1];
+        let cross_x = (X0 * Y0 * Y0 + X0 * X0 * tempX - X0 * Y0 * tempY) / (Y0 * Y0 + X0 * X0);
+        let cross_y = (-Y0 * cross_x / X0 + Y0);
         seriesInOption.push({
             data: [
                 [tempX, tempY],
-                [(X0 * Y0 * Y0 + X0 * X0 * tempX - X0 * Y0 * tempY) / (Y0 * Y0 + X0 * X0),
-                    (Y0 * Y0 * tempY * X0 - Y0 * X0 * X0 * tempX - tempX * X0 * X0 * Y0) / (Y0 * Y0 * X0 + X0 * X0 * X0)
-                ],
+                [cross_x, cross_y],
             ],
             type: 'line',
-            // label: {
-            //     show: true,
-            //     position:'top',
-            //     formatter: 'so handsome am i'
-            // },
+            label: {
+                emphasis: {
+                    show: true,
+                    formatter: function () {
+                        return 'Hi';
+                        // return Math.pow(Math.pow(tempX - cross_x, 2), Math.pow(tempY - cross_y, 2)).toString()
+                    },
+                    position: 'top'
+                }
+            },
+            itemStyle: {
+                normal: {
+                    color: 'red'
+                }
+            }
             // itemStyle : {  
             //     normal : {  
             //         lineStyle:{  
@@ -263,6 +273,9 @@ function drawDistanceLine() {
             // },  
         });
         if (tempDistance < shortestDistance) {
+            seriesInOption.pop();
+            option.series = seriesInOption;
+            myChart.setOption(option);
             shortestDistance = tempDistance;
             indexOfShortest = i;
         }
@@ -278,7 +291,11 @@ function drawDistanceLine() {
         label: {
             show: true,
             position: 'top',
-            formatter: 'so handsome am i'
+            formatter: 'so handsome am i',
+            emphasis: {
+                show: true,
+                formatter: 'how are you'
+            }
         },
         itemStyle: {
             normal: {
@@ -327,4 +344,202 @@ function drawDistanceLine() {
     });
     option.series = seriesInOption;
     myChart.setOption(option);
+}
+
+function drawNoLinear() {
+    let tempOption = {
+        tooltip: {},
+        xAxis3D: {
+            name: "x",
+            type: 'value',
+            //                min: 'dataMin',//获取数据中的最值
+            //                max: 'dataMax'
+        },
+        yAxis3D: {
+            name: "y",
+            type: 'value',
+            //                min: 'dataMin',
+            //                max: 'dataMax'
+        },
+        zAxis3D: {
+            name: "z",
+            type: 'value',
+            //                min: 'dataMin',
+            //                max: 'dataMax'
+        },
+        grid3D: {
+            axisLine: {
+                lineStyle: {
+                    color: '#000' //轴线颜色
+                }
+            },
+            axisPointer: {
+                lineStyle: {
+                    color: '#f00' //坐标轴指示线
+                },
+                show: true //不坐标轴指示线
+            },
+            viewControl: {
+                autoRotate: true, //旋转展示
+                //                     projection: 'orthographic'
+                beta: 10
+            },
+            boxWidth: 200,
+            boxHeight: 100,
+            boxDepth: 100,
+            top: -100
+        },
+
+        series: [{
+                type: 'scatter3D',
+                dimensions: ['a', 'b', 'c'], //显示框信息
+                data: mutiple_dataset_3D_echart[0],
+                symbolSize: 15, //点的大小
+                // symbol: 'triangle',
+                itemStyle: {
+                    borderWidth: 1,
+                    borderColor: 'rgba(0, 51, 255,0.1)',
+                    color: 'rgb(0, 51, 255)',
+                    opacity: 0.7
+                },
+                emphasis: {
+                    itemStyle: {
+                        // color: '#ccc' //高亮
+                    }
+                }
+            },
+            {
+                type: 'scatter3D',
+                dimensions: ['a', 'b', 'c'], //显示框信息
+                data: mutiple_dataset_3D_echart[1],
+                symbolSize: 15, //点的大小
+                // symbol: 'triangle',
+                itemStyle: {
+                    borderWidth: 1,
+                    borderColor: 'rgba(255, 0, 51,0.1)',
+                    color: 'rgb(255, 0, 51)',
+                    opacity: 0.7
+                },
+                emphasis: {
+                    // itemStyle: {
+                    //     color: '#ccc' //高亮
+                    // }
+                },
+            },
+            // 
+        ],
+        backgroundColor: "#fff"
+    }
+    myChart.setOption(tempOption, true);
+}
+
+function drawNoLinearWithAnimation() {
+    let tempDataset = [[],[]];
+    dataset_echart.forEach((arr, index) => {
+        arr.forEach((item, index1) => {
+            console.log(item,index)
+            let temp = item.concat();
+            temp.splice(2, 0, 0);
+            tempDataset[index][index1] = temp;
+        })
+    });
+    let tempMultipleData = [[],[]];
+    let seriesOption = [];
+    let tempOption = {
+        tooltip: {},
+        xAxis3D: {
+            name: "x",
+            type: 'value',
+        },
+        yAxis3D: {
+            name: "y",
+            type: 'value',
+        },
+        zAxis3D: {
+            name: "z",
+            type: 'value',
+        },
+        grid3D: {
+            axisLine: {
+                lineStyle: {
+                    color: '#000' //轴线颜色
+                }
+            },
+            axisPointer: {
+                lineStyle: {
+                    color: '#f00' //坐标轴指示线
+                },
+                show: true //不坐标轴指示线
+            },
+            viewControl: {
+                autoRotate: true, //旋转展示
+                beta: 10
+            },
+            boxWidth: 200,
+            boxHeight: 100,
+            boxDepth: 100,
+            top: -100
+        },
+
+        series: [],
+        backgroundColor: "#fff"
+    }
+    function render() {
+        if (tempDataset[0].length > 0) {
+            let temp = tempDataset[0].pop();
+            tempMultipleData.push([
+                temp[0] * temp[0],
+                temp[1] * temp[1],
+                2 * temp[0] * temp[1] + 50,
+                'good'
+            ]);
+        }else{
+            let temp = tempDataset[1].pop();
+            tempMultipleData.push([
+                temp[0] * temp[0],
+                temp[1] * temp[1],
+                2 * temp[0] * temp[1] - 50,
+                'bad'
+            ]);
+        }
+        seriesOption = [
+            {
+                type: 'scatter3D',
+                dimensions: ['a', 'b', 'c'], //显示框信息
+                data: tempDataset[0].concat(tempMultipleData[0]),
+                symbolSize: 15, //点的大小
+                itemStyle: {
+                    borderWidth: 1,
+                    borderColor: 'rgba(0, 51, 255,0.1)',
+                    color: 'rgb(0, 51, 255)',
+                    opacity: 0.7
+                },
+                emphasis: {
+                    itemStyle: {}
+                }
+            },
+            {
+                type: 'scatter3D',
+                dimensions: ['a', 'b', 'c'], //显示框信息
+                data: tempDataset[1].concat(tempMultipleData[1]),
+                symbolSize: 15, //点的大小
+                itemStyle: {
+                    borderWidth: 1,
+                    borderColor: 'rgba(255, 0, 51,0.1)',
+                    color: 'rgb(255, 0, 51)',
+                    opacity: 0.7
+                },
+                emphasis: {},
+            },
+        ];
+        tempOption.series = seriesOption;
+        myChart.setOption(tempOption, true);
+        while ((tempDataset[0].length + tempDataset[1].length) > 0) {
+            setTimeout(
+                render, 100
+            );
+        }
+    }
+    render();
+    
 }
