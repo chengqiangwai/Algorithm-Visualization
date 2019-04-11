@@ -7,3 +7,4 @@
 - https://github.com/plotly/dash
 - SVM教程：支持向量机的直观理解: https://www.jqr.com/article/000368
 - 支持向量机SVM推导及求解过程:https://blog.csdn.net/American199062/article/details/51322852
+- https://github.com/Lupino/bpnn.git
