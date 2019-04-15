@@ -958,14 +958,13 @@ function getWeightsOfLayer(weight, layer, isOutputLayer) {
         let tempI = +i;
 
         for (let j = 0; j < weight[tempI].length - (isOutputLayer ? 0 : 1); j++) {
-            console.log('label', weight[i][j])
+            let positiveWidth = Math.abs(weight[tempI][j])
             tempLinks.push({
                 id: (j + 1).toString() + (layer - 1) + " => " + (tempI + 1).toString() + layer,
                 lineStyle: {
-                    normal: {
-                        width: Math.abs(weight[tempI][j]) * 5,
-                        color: 'red',//tempColors[tempI]
-                    },
+                    width: positiveWidth < 1 ? 1 : positiveWidth,
+                    color: 'red',//tempColors[tempI]
+                    curveness: 0.1
                 },
                 name: null,
                 source: (j + 1).toString() + (layer - 1),
@@ -995,59 +994,59 @@ function drawPlotForBPNNInAnimation(weights) {
     let currentTime = + new Date();
     if (currentTime - lastRenderTime > 100) {
         lastRenderTime = currentTime;
-    // console.log("how are you", weights)
-    let tempLinks = []
-    tempLinks.push(...getWeightsOfLayer(weights.hiddenLayer, 2));
-    tempLinks.push(...getWeightsOfLayer(weights.outputLayer, 3, true));
+        // console.log("how are you", weights)
+        let tempLinks = []
+        tempLinks.push(...getWeightsOfLayer(weights.hiddenLayer, 2));
+        tempLinks.push(...getWeightsOfLayer(weights.outputLayer, 3, true));
 
-    let tempNodes = [];
-    tempNodes.push(...getNodesOfLayer(1, 2));
-    tempNodes.push(...getNodesOfLayer(2, 3));
-    tempNodes.push(...getNodesOfLayer(3, 1));
-    // console.log('tempNodes', tempNodes);
-    // console.log('tempLinks', tempLinks);
-    let categories = [
-        {
-            name: "类目0"
-        },
-        {
-            name: "类目1"
-        }
-    ]
-    let seriesInOption = [];
-    seriesInOption.push({
-        type: 'graph',
-        layout: 'none',
-        data: tempNodes,
-        links: tempLinks,
-        categories: categories,
-        roam: true,
-        focusNodeAdjacency: true,
-        itemStyle: {
-            normal: {
-                borderColor: '#fff',
-                borderWidth: 1,
-                shadowBlur: 10,
-                shadowColor: 'rgba(0, 0, 0, 0.3)'
+        let tempNodes = [];
+        tempNodes.push(...getNodesOfLayer(1, 2));
+        tempNodes.push(...getNodesOfLayer(2, 3));
+        tempNodes.push(...getNodesOfLayer(3, 1));
+        // console.log('tempNodes', tempNodes);
+        // console.log('tempLinks', tempLinks);
+        let categories = [
+            {
+                name: "类目0"
+            },
+            {
+                name: "类目1"
             }
-        },
-        label: {
-            position: 'right',
-            formatter: '{b}'
-        },
-        lineStyle: {
-            color: 'source',
-            curveness: 0.0
-        },
-        animationDuration: 100
-        // edgeSymbol: ['none', 'arrow']
-    })
-    renderTime++
-    option.series = seriesInOption;
-    option.title = {
-        text: 'renderTime: ' + renderTime
-    }
-    myChart.setOption(option, true);
+        ]
+        let seriesInOption = [];
+        seriesInOption.push({
+            type: 'graph',
+            layout: 'none',
+            data: tempNodes,
+            links: tempLinks,
+            categories: categories,
+            roam: true,
+            focusNodeAdjacency: true,
+            itemStyle: {
+                normal: {
+                    borderColor: '#fff',
+                    borderWidth: 1,
+                    shadowBlur: 10,
+                    shadowColor: 'rgba(0, 0, 0, 0.3)'
+                }
+            },
+            label: {
+                position: 'right',
+                formatter: '{b}'
+            },
+            lineStyle: {
+                color: 'source',
+                curveness: 0.0
+            },
+            animationDuration: 100
+            // edgeSymbol: ['none', 'arrow']
+        })
+        renderTime++
+        option.series = seriesInOption;
+        option.title = {
+            text: 'renderTime: ' + renderTime
+        }
+        myChart.setOption(option, true);
     }
 
 }
@@ -1056,7 +1055,7 @@ function connectWebsocket() {
     var socket = new WebSocket('ws://localhost:3368');
     let i = 0
     let lastRenderTime = + new Date();
-    
+
     socket.onmessage = function (result, nTime) {
         let currentTime = + new Date();
         if (currentTime - lastRenderTime > 100) {
