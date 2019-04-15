@@ -41,6 +41,8 @@ def rand(a, b):
 def sigmoid(x):
     return math.tanh(x)
 
+
+
 # derivative of our sigmoid function, in terms of the output (i.e. y)
 
 
@@ -144,7 +146,7 @@ class BPNNet:
                 # print('i：' + str(i) + '  j: ' + str(j))
                 tempHiddenOutputs = self.hlayer.calc([i, j, 1.0])
                 allHiddenOutputs.append(tempHiddenOutputs)
-                finalOutputs.append(self.olayer.calc(tempHiddenOutputs))
+                finalOutputs.append(self.olayer.calc(tempHiddenOutputs)[0])
         return {
             "allHiddenOutputs": allHiddenOutputs,
             "finalOutputs": finalOutputs
@@ -172,12 +174,11 @@ class BPNNet:
 
     def test(self, patterns):
         for p in patterns:
-            print(p[0], '->', self.calc(p[0]))
+            print(p[0], '->', self.calc(p[0]), p[1])
 
     def train(self, patterns, connection, iterations=1000, N=0.5, M=0.1):
         # N: learning rate
         # M: momentum factor
-        dataForHeatMap = {}
         times = 0
         for i in range(iterations):
             error = 0.0
@@ -186,13 +187,13 @@ class BPNNet:
                 targets = p[1]
                 self.calc(inputs)
                 error = error + self.update(targets, N, M)
-                if times % 10 == 0:
-                    connection.send_data({
-                        "times": times,
-                        "calcResult": self.calcTest(),
-                        "weights": self.getWeights(),
-                        "error": error
-                    })
+                # if times % 10 == 0:
+                #     connection.send_data({
+                #         "times": times,
+                #         "calcResult": self.calcTest(),
+                #         "weights": self.getWeights(),
+                #         "error": error
+                #     })
                 times += 1
             if i % 100 == 0:
                 print('error %-.10f' % error)
@@ -334,7 +335,7 @@ def handshake(con):
     if not len(shake):
         return False
  
-    header, data = shake.split('\r\n\r\n', 1)
+    header, data = shake.decode().split('\r\n\r\n', 1)
     for line in header.split('\r\n')[1:]:
         key, val = line.split(': ', 1)
         headers[key] = val
@@ -365,6 +366,7 @@ def new_service():
     except:
         print("Server is already running,quit")
         sys.exit()
+
  
     while True:
         connection, address = sock.accept()

@@ -964,7 +964,7 @@ function getWeightsOfLayer(weight, layer, isOutputLayer) {
                 lineStyle: {
                     width: positiveWidth < 1 ? 1 : positiveWidth,
                     color: 'red',//tempColors[tempI]
-                    curveness: 0.1
+                    curveness: 0.0
                 },
                 name: null,
                 source: (j + 1).toString() + (layer - 1),
@@ -989,7 +989,7 @@ function getWeightsOfLayer(weight, layer, isOutputLayer) {
 let renderTime = 0
 let lastRenderTime = +new Date();
 // 绘制 所有样本点
-function drawPlotForBPNNInAnimation(weights) {
+function drawPlotForBPNNInAnimation(weights, finalOutputs) {
 
     let currentTime = + new Date();
     if (currentTime - lastRenderTime > 100) {
@@ -1003,8 +1003,7 @@ function drawPlotForBPNNInAnimation(weights) {
         tempNodes.push(...getNodesOfLayer(1, 2));
         tempNodes.push(...getNodesOfLayer(2, 3));
         tempNodes.push(...getNodesOfLayer(3, 1));
-        // console.log('tempNodes', tempNodes);
-        // console.log('tempLinks', tempLinks);
+
         let categories = [
             {
                 name: "类目0"
@@ -1014,32 +1013,52 @@ function drawPlotForBPNNInAnimation(weights) {
             }
         ]
         let seriesInOption = [];
+        
+        // seriesInOption.push({
+        //     type: 'graph',
+        //     layout: 'none',
+        //     data: tempNodes,
+        //     links: tempLinks,
+        //     categories: categories,
+        //     roam: true,
+        //     focusNodeAdjacency: true,
+        //     itemStyle: {
+        //         normal: {
+        //             borderColor: '#fff',
+        //             borderWidth: 1,
+        //             shadowBlur: 10,
+        //             shadowColor: 'rgba(0, 0, 0, 0.3)'
+        //         }
+        //     },
+        //     label: {
+        //         position: 'right',
+        //         formatter: '{b}'
+        //     },
+        //     lineStyle: {
+        //         color: 'source',
+        //         curveness: 0.0
+        //     },
+        //     animationDuration: 100
+        //     // edgeSymbol: ['none', 'arrow']
+        // });
+
+        let dataForScatter = getTrainResult(finalOutputs);
         seriesInOption.push({
-            type: 'graph',
-            layout: 'none',
-            data: tempNodes,
-            links: tempLinks,
-            categories: categories,
-            roam: true,
-            focusNodeAdjacency: true,
+            type:"scatter",
+            data: dataForScatter,
             itemStyle: {
-                normal: {
-                    borderColor: '#fff',
-                    borderWidth: 1,
-                    shadowBlur: 10,
-                    shadowColor: 'rgba(0, 0, 0, 0.3)'
-                }
+                color: function(item){
+                    let output = item.data[2];
+                    if(output < 0){
+                        return `rgba(0, 191, 255, ${-output})`
+                    }else{
+                        return `rgba(255, 106, 106, ${output})`
+                    }
+                },
+
             },
-            label: {
-                position: 'right',
-                formatter: '{b}'
-            },
-            lineStyle: {
-                color: 'source',
-                curveness: 0.0
-            },
-            animationDuration: 100
-            // edgeSymbol: ['none', 'arrow']
+            symbolSize: 10,
+            symbol: 'rect'
         })
         renderTime++
         option.series = seriesInOption;
@@ -1051,16 +1070,37 @@ function drawPlotForBPNNInAnimation(weights) {
 
 }
 
+// 将输出结果整合成可绘制的数据
+function getTrainResult( finalOutputs ){
+    let tempData = [];
+    let tempI = 0;
+    for(let i = -20;i < 20;i++){
+        for(let j = -20;j<20;j++){
+            tempData.push([
+                i,j,finalOutputs[tempI]
+            ]);
+            tempI++;
+        }
+    }
+    return tempData;
+}
+
 function connectWebsocket() {
     var socket = new WebSocket('ws://localhost:3368');
     let i = 0
     let lastRenderTime = + new Date();
 
     socket.onmessage = function (result, nTime) {
+        let data = JSON.parse(result.data);
+        if(i == 0) {
+            // drawPlotForBPNNInAnimation(data.weights, data.calcResult.finalOutputs);
+            console.log('output: ', data.calcResult.finalOutputs);
+            i++
+        }
         let currentTime = + new Date();
         if (currentTime - lastRenderTime > 100) {
             lastRenderTime = currentTime;
-            drawPlotForBPNNInAnimation(JSON.parse(result.data).weights);
+            drawPlotForBPNNInAnimation(data.weights, data.calcResult.finalOutputs);
         }
     }
 }
